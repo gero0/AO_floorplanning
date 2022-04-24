@@ -1,0 +1,2 @@
+# Floorplanning
+Repozytorium zawierające implementację programu szukającego optymalnego rozmieszczenia bloków.
