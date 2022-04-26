@@ -1,0 +1,20 @@
+{
+    "blocks": [
+        {
+            "name": "BLKUL",
+            "width": 1295,
+            "height": 2114,
+            "rotated": false
+        },
+        {
+            "name": "BLKUR",
+            "width": 1295,
+            "height": 1939,
+            "rotated": false
+        }
+    ],
+
+    "connections": [
+        
+    ]
+}
