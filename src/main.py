@@ -1,4 +1,5 @@
 import files
+import graphics
 import binarytree
 
 
@@ -8,6 +9,8 @@ if __name__ == "__main__":
         (blocks, connections) = files.load_file()
     except:
         exit()
+
+    graphics.placement_visualisation("results.png", blocks)
 
     block_names = [block.name for block in blocks]
 
