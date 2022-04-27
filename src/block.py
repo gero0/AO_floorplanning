@@ -2,11 +2,13 @@ import json
 
 
 class Block:
-    def __init__(self, name, w, h, rotated = False) -> None:
+    def __init__(self, name, w, h, rotated=False, positionX=0, positionY=0) -> None:
         self.name = name
         self.width = w
         self.height = h
         self.rotated = rotated
+        self.positionX = positionX
+        self.positionY = positionY
 
     def rotate(self):
         self.rotated = not self.rotated
@@ -26,5 +28,12 @@ def block_from_module(module):
 
 
 def block_from_JSON(json):
-    block = Block(json["name"], json["width"], json["height"], json["rotated"])
+    block = Block(
+        json["name"],
+        json["width"],
+        json["height"],
+        json["rotated"],
+        json["positionX"],
+        json["positionY"],
+    )
     return block

@@ -1,34 +1,22 @@
-import block
-import sys
-import json
-import yal_parser
+import files
+import binarytree
+
 
 if __name__ == "__main__":
-    filename = None
+
     try:
-        filename = sys.argv[1]
+        (blocks, connections) = files.load_file()
     except:
-        print("Error: No file argument passed")
         exit()
 
-    blocks = []
-    connections = []
+    block_names = [block.name for block in blocks]
 
-    if len(sys.argv) > 2 and sys.argv[2] == "--yal":
-        print("Parsing YAL file...")
-        modules = yal_parser.parse_file(filename)
-        blocks = [block.block_from_module(m) for m in modules if m.name != "bound"]
-    else:
-        print("Parsing JSON file...")
-        file = open(filename, 'r')
-        try:
-            data = json.loads(file.read())
-            blocks = [block.block_from_JSON(bl) for bl in data['blocks']]
-            connections = data['connections']
-        except:
-            print("Error: Invalid JSON file")
-            exit()
-    
+    print(block_names)
 
-    for block in blocks:
-        print(block.toJSON())
+    binary_tree = binarytree.build(block_names)
+    print('Binary tree from list :\n',
+      binary_tree)
+ 
+
+    # for block in blocks:
+    #     print(block.toJSON())

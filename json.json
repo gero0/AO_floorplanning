@@ -4,13 +4,17 @@
             "name": "BLKUL",
             "width": 1295,
             "height": 2114,
-            "rotated": false
+            "rotated": false,
+            "positionX": 0,
+            "positionY": 0
         },
         {
             "name": "BLKUR",
             "width": 1295,
             "height": 1939,
-            "rotated": false
+            "rotated": false,
+            "positionX": 0,
+            "positionY": 0
         }
     ],
 
