@@ -1,36 +1,37 @@
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
+base_font_size = 12
 
-def get_bounds(blocks):
-    max_y = max([block.positionY + block.height for block in blocks])
-    max_x = max([block.positionX + block.width for block in blocks])
+def get_bounds(blocks, scale=1.0):
+    max_y = int(max([block.positionY + block.height for block in blocks]) * scale)
+    max_x = int(max([block.positionX + block.width for block in blocks]) * scale)
     return (max_x, max_y)
 
 
-def draw_block(block, img_size, img_d):
+def draw_block(block, img_size, img_d, scale=1.0):
     # Invert Y coordinate, because for pil 0,0 is top left corner of screen,
-    top_left_x = block.positionX
-    top_left_y = img_size[1] - (block.positionY + block.height)
-    bottom_right_y = img_size[1] - block.positionY
-    bottom_right_x = block.positionX + block.width
+    top_left_x = int(block.positionX * scale)
+    top_left_y = int(img_size[1] - (block.positionY + block.height) * scale)
+    bottom_right_y = int(img_size[1] - block.positionY * scale)
+    bottom_right_x = int((block.positionX + block.width) * scale)
     shape = [(top_left_x, top_left_y), (bottom_right_x, bottom_right_y)]
     img_d.rectangle(shape, fill="white", outline="black")
 
     center_x = top_left_x + (bottom_right_x - top_left_x) / 2
     center_y = top_left_y + (bottom_right_y - top_left_y) / 2
 
-    print(bottom_right_y, top_left_y, center_y)
+    fnt = ImageFont.truetype("OpenSans-Bold.ttf", int(base_font_size * scale))
 
-    w, h = img_d.textsize(block.name)
-    img_d.text((center_x - (w / 2), center_y - (h / 2)), block.name, fill="black")
+    w, h = img_d.textsize(block.name, font=fnt)
+    img_d.text((center_x - (w / 2), center_y - (h / 2)), block.name, fill="black", font=fnt)
 
 
-def placement_visualisation(filename, blocks, connections=None):
-    img_size = get_bounds(blocks)
+def placement_visualisation(filename, blocks, connections=None, scale=1.0):
+    img_size = get_bounds(blocks, scale)
     image = Image.new("RGB", img_size, color=(192, 192, 192))
     img_d = ImageDraw.Draw(image)
 
     for block in blocks:
-        draw_block(block, img_size, img_d)
+        draw_block(block, img_size, img_d, scale)
 
     image.save(filename)
