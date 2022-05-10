@@ -86,6 +86,22 @@ def calc_obj_function(blocks, connections, alpha, beta):
     return alpha * A + beta * L
 
 
+def save_to_file(blocks, connections, tree):
+    block_string = ""
+    for block in blocks:
+        block_string += block.toJSON() + ","
+
+    # Remove trailing comma
+    block_string = block_string[:-1]
+
+    output_str = '{{\n"blocks":[{}],\n "connections":{},\n "tree":{}\n}}'.format(
+        block_string, connections, str(tree.values).replace("'", '"')
+    )
+
+    with open("result.json", "w") as file:
+        file.write(output_str)
+
+
 if __name__ == "__main__":
 
     try:
@@ -116,6 +132,8 @@ if __name__ == "__main__":
     nbr = place_blocks(new_tree, blocks)
 
     graphics.placement_visualisation("results_r.png", nbr, scale=0.1, fontscale=1.0)
+
+    save_to_file(nbr, connections, new_tree)
 
     # while True:
     #     binary_tree = treemanip.move_random_node(binary_tree)
