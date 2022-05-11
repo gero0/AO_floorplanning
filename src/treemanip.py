@@ -95,33 +95,74 @@ def rotate_random_node(tree, blocks):
     return new_tree
 
 
-# def swap_random_nodes(tree):
-#     new_tree = tree.clone()
-#     while True:
-#         node_1 = get_random_node(new_tree)
-#         node_2 = get_random_node(new_tree)
+def swap_nodes_related(root, node_1, node_2, parent_1, parent_2):
+    remove_child(parent_2, node_2)
+    remove_child(parent_1, node_1)
 
-#         if node_1 == node_2:
-#             continue
+    insert_child_random(parent_1, node_2)
+    node = get_random_node_with_free_place(node_2)
+    insert_child_random(node, node_1)
 
-#         if node_1 == new_tree or node_2 == new_tree:
-#             # We need to rebuild tree
-#             # do nothing for now
-#             return new_tree
+    return root
 
-#         log("Swapping {} and {}".format(node_1.value, node_2.value))
+def swap_nodes_root(root, child):
+    # just swap two nodes leaving their children in place
+    # we're changing root so we need to build a new tree
+    values = root.values
 
-#         parent_1 = binarytree.get_parent(new_tree, node_1)
-#         parent_2 = binarytree.get_parent(new_tree, node_2)
+    for i in range(0, len(values)):
+        if values[i] == child.value:
+            values[i] = root.value
+            
+    values[0] = child.value
 
-#         if parent_1.left == node_1:
-#             parent_1.left = node_2
-#         else:
-#             parent_1.right = node_2
+    new_tree = binarytree.build(values)
+    return new_tree
 
-#         if parent_2.left == node_2:
-#             parent_2.left = node_1
-#         else:
-#             parent_2.right = node_1
 
-#         return new_tree
+def swap_unrelated(parent_1, parent_2, child_1, child_2):
+    if parent_1.left == child_1:
+        parent_1.left = child_2
+    else:
+        parent_1.right = child_2
+
+    if parent_2.left == child_2:
+        parent_2.left = child_1
+    else:
+        parent_2.right = child_1
+
+def get_two_random_nodes(tree):
+    while True:
+        node_1 = get_random_node(tree)
+        node_2 = get_random_node(tree)
+
+        # choose randomly again if we selected the same node twice
+        if node_1 == node_2:
+            continue
+
+        return (node_1, node_2)
+
+def swap_random_nodes(tree):
+    new_tree = tree.clone()
+    (node_1, node_2) = get_two_random_nodes(new_tree)
+
+    parent_1 = binarytree.get_parent(new_tree, node_1)
+    parent_2 = binarytree.get_parent(new_tree, node_2)
+
+    log("Swapping {} and {}".format(node_1.value, node_2.value))
+
+    # Handle case where one of nodes is the root
+    if parent_1 is None:
+        return swap_nodes_root(node_1, node_2)
+    if parent_2 is None:
+        return swap_nodes_root(node_2, node_1)
+
+    if is_ancestor(new_tree, node_1, node_2):
+        return swap_nodes_related(new_tree, node_1, node_2, parent_1, parent_2)
+    if is_ancestor(new_tree, node_2, node_1):
+        return swap_nodes_related(new_tree, node_2, node_1, parent_2, parent_1)
+
+    # Nodes are not related, just swap pointers
+    swap_unrelated(parent_1, parent_2, node_1, node_2)
+
+    return new_tree

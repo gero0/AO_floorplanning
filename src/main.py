@@ -128,17 +128,10 @@ if __name__ == "__main__":
 
     print("Obj function val: ", calc_obj_function(nb, connections, 1.0, 0.0))
 
-    new_tree = treemanip.rotate_random_node(binary_tree, blocks)
-    nbr = place_blocks(new_tree, blocks)
-
-    graphics.placement_visualisation("results_r.png", nbr, scale=0.1, fontscale=1.0)
-
-    save_to_file(nbr, connections, new_tree)
-
-    # while True:
-    #     binary_tree = treemanip.move_random_node(binary_tree)
-    #     print(binary_tree)
-    #     sleep(1)
+    while True:
+        binary_tree = treemanip.swap_random_nodes(binary_tree)
+        print(binary_tree)
+        sleep(0.1)
 
     # for block in blocks:
     #     print(block.toJSON())
