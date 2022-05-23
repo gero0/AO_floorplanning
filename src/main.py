@@ -1,5 +1,7 @@
 import random
 from time import sleep
+
+from numpy import block
 import files
 import graphics
 import binarytree
@@ -129,9 +131,15 @@ if __name__ == "__main__":
     print("Obj function val: ", calc_obj_function(nb, connections, 1.0, 0.0))
 
     while True:
-        binary_tree = treemanip.swap_random_nodes(binary_tree)
+        choice = random.randint(0,1)
+        if choice == 0:
+            binary_tree = treemanip.swap_random_nodes(binary_tree)
+        else:
+            binary_tree = treemanip.move_random_node(binary_tree)
+       
         print(binary_tree)
         sleep(0.1)
+        save_to_file(blocks, connections, binary_tree)
 
     # for block in blocks:
     #     print(block.toJSON())
