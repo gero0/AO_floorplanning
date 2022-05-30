@@ -1,13 +1,26 @@
 import random
 from time import sleep
 
-from numpy import block
+import numpy
+import numpy as np
+
 import files
 import graphics
 import binarytree
 import treemanip
 import util
+import math
+import matplotlib.pyplot as plt
 
+# TODO
+# wyrzarzanie
+# obliczanie pola
+# definicja polaczen?(środki)
+# 1. Znajdź nowe randomowe położenie
+# 2. Sprawdź, czy lepsze
+# 3. Jeśli jest lepsze, zastąp starsze rozwiązanie, jeśli nie, to jest losowa szansa że przyjmujemy gorsze rozwiązanie (zależna od temperatury)
+# 3. Zmniejsz temperaturę
+# Goto 1
 
 def check_if_feasible(blocks):
     # check if blocks don't collide
@@ -17,10 +30,10 @@ def check_if_feasible(blocks):
                 continue
 
             if (
-                block.positionX < block2.positionX + block2.width
-                and block.positionX + block.width > block2.positionX
-                and block.positionY < block2.positionY + block2.height
-                and block.height + block.positionY > block2.positionY
+                    block.positionX < block2.positionX + block2.width
+                    and block.positionX + block.width > block2.positionX
+                    and block.positionY < block2.positionY + block2.height
+                    and block.height + block.positionY > block2.positionY
             ):
                 util.log(
                     "Solution unfeasible. Collision between blocks {} and {}".format(
@@ -40,25 +53,25 @@ def set_block_position(blocks, name, positionX, positionY):
             block.positionY = positionY
 
 
-def visit_node(blocks, node, parent, is_left_child):
+def visit_node(bloks, node, parent, is_left_child):
     if node is None:
         return
 
-    parent_block = treemanip.get_block_by_name(blocks, parent.value)
+    parent_block = treemanip.get_block_by_name(bloks, parent.value)
 
     if is_left_child:
         posX = parent_block.positionX + parent_block.width  # type:ignore
         posY = parent_block.positionY  # type:ignore
 
-        set_block_position(blocks, node.value, posX, posY)
+        set_block_position(bloks, node.value, posX, posY)
     else:
         posX = parent_block.positionX  # type:ignore
         posY = parent_block.positionY + parent_block.height  # type:ignore
 
-        set_block_position(blocks, node.value, posX, posY)
+        set_block_position(bloks, node.value, posX, posY)
 
-    visit_node(blocks, node.left, node, True)
-    visit_node(blocks, node.right, node, False)
+    visit_node(bloks, node.left, node, True)
+    visit_node(bloks, node.right, node, False)
 
 
 def place_blocks(tree_root, blocks):
@@ -104,6 +117,20 @@ def save_to_file(blocks, connections, tree):
         file.write(output_str)
 
 
+def find_random_possible_change(blocks, tree):
+    while True:
+        operation = random.randint(0, 1)
+        if operation == 0:
+            candidate_tree = treemanip.swap_random_nodes(tree)
+        else:
+            candidate_tree = treemanip.move_random_node(tree)
+
+        candidate_blocks = place_blocks(candidate_tree, blocks)
+
+        if check_if_feasible(blocks):
+            return candidate_blocks, candidate_tree
+
+
 if __name__ == "__main__":
 
     try:
@@ -124,22 +151,43 @@ if __name__ == "__main__":
         if check_if_feasible(blocks):
             break
 
-    graphics.placement_visualisation("results_2.png", nb, scale=0.1, fontscale=1.0)
-
-    print("Binary tree from list :\n", binary_tree)
-
-    print("Obj function val: ", calc_obj_function(nb, connections, 1.0, 0.0))
-
-    while True:
-        choice = random.randint(0,1)
-        if choice == 0:
-            binary_tree = treemanip.swap_random_nodes(binary_tree)
+    initTemp = 1000
+    it = 0
+    bestEval = graphics.get_eval(blocks)
+    bestTree = binary_tree
+    bestBlocks = blocks
+    idealSolution = graphics.get_ideal_eval(blocks)
+    acceptableError = 0.1
+    lookingForBestResult = True
+    candidatesEvaluations = []
+    temperatuers = [initTemp]
+    while lookingForBestResult:
+        it += 1
+        candidateBlocks, candidateTree = find_random_possible_change(bestBlocks, bestTree)
+        candidateEval = graphics.get_eval(candidateBlocks)
+        candidatesEvaluations.append(candidateEval-idealSolution)
+        if bestEval > candidateEval:
+            bestEval, bestTree, bestBlocks = candidateEval, candidateTree, candidateBlocks
         else:
-            binary_tree = treemanip.move_random_node(binary_tree)
-       
-        print(binary_tree)
-        sleep(0.1)
-        save_to_file(blocks, connections, binary_tree)
+            diff = (bestEval - candidateEval)/100000
+            temp = initTemp/(it + 1)
+            temperatuers.append(temp)
+            rand = random.random()
+            print(diff, temp)
+            exp = np.exp(-diff/temp)
+            print("rand \t exp \t diff\n", rand, exp, diff)
+            shouldAcceptWorseCandidate = rand < exp
+            if shouldAcceptWorseCandidate:
+                bestEval, bestTree, bestBlocks = candidateEval, candidateTree, candidateBlocks
+        if bestEval <= idealSolution * (1 + acceptableError):
+            break
 
-    # for block in blocks:
-    #     print(block.toJSON())
+
+
+    plt.plot(range(0, len(candidatesEvaluations)), candidatesEvaluations)
+    plt.show()
+    plt.plot(range(0, len(temperatuers)), temperatuers)
+    plt.show()
+    save_to_file(bestBlocks, connections, bestTree)
+    graphics.placement_visualisation("results_final.png", bestBlocks, scale=0.1, fontscale=1.0)
+

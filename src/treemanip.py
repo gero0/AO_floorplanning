@@ -85,6 +85,7 @@ def move_random_node(tree):
 
 def rotate_random_node(tree, blocks):
     new_tree = tree.clone()
+    blocks = blocks.clone()
     node = get_random_node(new_tree)
 
     log("Rotating block {}".format(node.value))
@@ -92,7 +93,7 @@ def rotate_random_node(tree, blocks):
     block = get_block_by_name(blocks, node.value)
     block.rotate()  # type:ignore
 
-    return new_tree
+    return new_tree, blocks
 
 
 def swap_nodes_related(root, node_1, node_2, parent_1, parent_2):

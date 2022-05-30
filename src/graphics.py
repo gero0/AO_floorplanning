@@ -2,6 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 base_font_size = 12
 
+
 def get_bounds(blocks, scale=1.0):
     max_y = int(max([block.positionY + block.height for block in blocks]) * scale)
     max_x = int(max([block.positionX + block.width for block in blocks]) * scale)
@@ -35,3 +36,16 @@ def placement_visualisation(filename, blocks, connections=None, scale=1.0, fonts
         draw_block(block, img_size, img_d, scale, fontscale)
 
     image.save(filename)
+
+
+def get_eval(blocks):
+    x, y = get_bounds(blocks, 1.0)
+    return x * y
+
+
+# return sum of blocks areas
+def get_ideal_eval(blocks):
+    area = 0
+    for block in blocks:
+        area += block.width * block.height
+    return area
