@@ -115,16 +115,23 @@ def calc_obj_function_ideal(blocks, connections, alpha, beta):
 
     return alpha * A + beta * L
 
-def save_to_file(blocks, connections, tree):
+def save_to_file(blocks, connections, tree, obj):
     block_string = ""
     for block in blocks:
         block_string += block.toJSON() + ","
 
     # Remove trailing comma
     block_string = block_string[:-1]
+    connections = [x.toJSON() for x in connections]
+    connstring=""
+    for i in range(0, len(connections)):
+        connstring += connections[i]
+        if(i != len(connections) - 1):
+            connstring += ','
 
-    output_str = '{{\n"blocks":[{}],\n "connections":{},\n "tree":{}\n}}'.format(
-        block_string, connections, str(tree.values).replace("'", '"')
+
+    output_str = '{{\n"blocks":[{}],\n "connections":[{}],\n "tree":{},\n "F(L)":{}\n }}'.format(
+        block_string, connstring, str(tree.values).replace("'", '"'), str(obj).replace("'", '"')
     )
 
     with open("result.json", "w") as file:
@@ -229,5 +236,5 @@ if __name__ == "__main__":
     plt.xlabel("Nr iteracji");
     plt.ylabel("Najniższa wartośc f.  celu");
     plt.show()
-    save_to_file(bestBlocks, connections, bestTree)
+    save_to_file(bestBlocks, connections, bestTree, bestEvaluations[-1])
     graphics.placement_visualisation("results_final.png", bestBlocks, scale=0.1, fontscale=1.0)
