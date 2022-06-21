@@ -1,7 +1,5 @@
 import random
-from time import sleep
 
-import numpy
 import numpy as np
 
 import files
@@ -23,7 +21,7 @@ import matplotlib.pyplot as plt
 # 3. Jeśli jest lepsze, zastąp starsze rozwiązanie, jeśli nie, to jest losowa szansa że przyjmujemy gorsze rozwiązanie (zależna od temperatury)
 # 3. Zmniejsz temperaturę
 # Goto 1
-from src.block import Block
+from block import Block
 
 
 def check_if_feasible(blocks):
@@ -181,7 +179,7 @@ if __name__ == "__main__":
     bestTree = binary_tree
     bestBlocks = blocks
     idealSolution = calc_obj_function_ideal(blocks, connections, alpha, beta)
-    acceptableError = 0.1
+    acceptableError = 0.2
     lookingForBestResult = True
     candidatesEvaluations = []
     bestEvaluations = []
