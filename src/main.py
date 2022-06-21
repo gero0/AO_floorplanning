@@ -97,7 +97,7 @@ def calc_obj_function_ideal(blocks, connections, alpha, beta):
     A = 0
     for block in blocks:
         A += block.width * block.height
-    L = 0
+    L = calc_connection_length(blocks, connections)
 
     return alpha * A + beta * L
 
