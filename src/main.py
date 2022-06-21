@@ -6,6 +6,7 @@ import binarytree
 import treemanip
 import math
 import matplotlib.pyplot as plt
+import numpy as np
 from block import Block
 
 
@@ -162,11 +163,6 @@ if __name__ == "__main__":
     except:
         exit()
 
-    print(alpha, beta)
-
-    print(connections);
-    graphics.placement_visualisation("results.png", blocks, scale=0.1, fontscale=1.0)
-
     while True:
         block_names = [block.name for block in blocks]
         random.shuffle(block_names)
@@ -178,7 +174,7 @@ if __name__ == "__main__":
         if check_if_feasible(blocks):
             break
     # Parameters
-    initTemp = 2000
+    initTemp = 5000
     MaxOneTempIterations = 5
     ##########################
     currentTempIterations = 0
@@ -192,6 +188,9 @@ if __name__ == "__main__":
     candidatesEvaluations = []
     bestEvaluations = []
     temperatuers = [initTemp]
+
+    print("Init temp: {}, alpha: {}, beta: {}".format(initTemp, alpha, beta))
+
     while lookingForBestResult:
         if currentTempIterations >= MaxOneTempIterations:
             it += 1
@@ -206,9 +205,10 @@ if __name__ == "__main__":
             it += 1
         else:
             diff = (bestEval - candidateEval) / idealSolution
-            initTemp = (initTemp / (it + 1) ) 
+            # initTemp = (initTemp / (it + 1) ) 
             # #* abs(1-diff)
             # initTemp = initTemp * (1-abs(-diff))
+            initTemp = initTemp * 0.95
 
             temperatuers.append(initTemp)
             rand = random.random()
@@ -227,14 +227,20 @@ if __name__ == "__main__":
     plt.plot(range(0, len(candidatesEvaluations)), candidatesEvaluations)
     plt.xlabel("Nr iteracji");
     plt.ylabel("Wartość funkcji celu");
-    plt.show()
+    plt.savefig("candidates.png")
+    plt.clf()
     plt.plot(range(0, len(temperatuers)), temperatuers)
     plt.xlabel("Nr iteracji");
     plt.ylabel("Temperatura");
-    plt.show()
+    plt.savefig("temperature.png")
+    plt.clf()
     plt.plot(range(0, len(bestEvaluations)), bestEvaluations)
     plt.xlabel("Nr iteracji");
-    plt.ylabel("Najniższa wartośc f.  celu");
-    plt.show()
+    plt.ylabel("Wartość f.  celu");
+    plt.savefig("best.png")
+    plt.clf()
     save_to_file(bestBlocks, connections, bestTree, bestEvaluations[-1])
     graphics.placement_visualisation("results_final.png", bestBlocks, scale=0.1, fontscale=1.0)
+
+    print("Done!")
+    print("F(L) = {}".format(bestEvaluations[-1]))

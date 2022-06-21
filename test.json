@@ -6,21 +6,21 @@
             "height": 616,
             "rotated": false,
             "positionX": 0,
-            "positionY": 3829
+            "positionY": 0
         },
         {
             "name": "BLKD",
             "width": 1295,
             "height": 490,
             "rotated": false,
-            "positionX": 1652,
-            "positionY": 1295
+            "positionX": 0,
+            "positionY": 0
         },
         {
             "name": "BLKLL",
             "width": 2534,
             "height": 1295,
-            "rotated": true,
+            "rotated": false,
             "positionX": 0,
             "positionY": 0
         },
@@ -29,32 +29,32 @@
             "width": 1295,
             "height": 2569,
             "rotated": false,
-            "positionX": 1652,
-            "positionY": 1785
+            "positionX": 0,
+            "positionY": 0
         },
         {
             "name": "BLKP",
             "width": 756,
             "height": 840,
             "rotated": false,
-            "positionX": 882,
-            "positionY": 2513
+            "positionX": 0,
+            "positionY": 0
         },
         {
             "name": "BLKRC",
             "width": 1939,
             "height": 1162,
             "rotated": true,
-            "positionX": 2947,
-            "positionY": 2590
+            "positionX": 0,
+            "positionY": 0
         },
         {
             "name": "BLKRS",
             "width": 1652,
             "height": 1218,
-            "rotated": true,
+            "rotated": false,
             "positionX": 0,
-            "positionY": 1295
+            "positionY": 0
         },
         {
             "name": "BLKT",
@@ -62,22 +62,22 @@
             "height": 1316,
             "rotated": false,
             "positionX": 0,
-            "positionY": 2513
+            "positionY": 0
         },
         {
             "name": "BLKUL",
             "width": 2114,
             "height": 1295,
-            "rotated": true,
-            "positionX": 2947,
-            "positionY": 1295
+            "rotated": false,
+            "positionX": 0,
+            "positionY": 0
         },
         {
             "name": "BLKUR",
             "width": 1939,
             "height": 1295,
-            "rotated": true,
-            "positionX": 2534,
+            "rotated": false,
+            "positionX": 0,
             "positionY": 0
         }
     ],
