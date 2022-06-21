@@ -174,7 +174,7 @@ if __name__ == "__main__":
         if check_if_feasible(blocks):
             break
     # Parameters
-    initTemp = 5000
+    initTemp = 5000.0
     MaxOneTempIterations = 5
     ##########################
     currentTempIterations = 0
@@ -203,6 +203,7 @@ if __name__ == "__main__":
             bestEval, bestTree, bestBlocks = candidateEval, candidateTree, candidateBlocks
             currentTempIterations = 0
             it += 1
+            temperatuers.append(initTemp)
         else:
             diff = (bestEval - candidateEval) / idealSolution
             # initTemp = (initTemp / (it + 1) ) 
@@ -242,5 +243,6 @@ if __name__ == "__main__":
     save_to_file(bestBlocks, connections, bestTree, bestEvaluations[-1])
     graphics.placement_visualisation("results_final.png", bestBlocks, scale=0.1, fontscale=1.0)
 
+    print(bestTree)
     print("Done!")
     print("F(L) = {}".format(bestEvaluations[-1]))
