@@ -72,7 +72,7 @@ def move_random_node(tree):
         if (node_1 == new_parent) or is_ancestor(new_tree, node_1, new_parent):
             continue
 
-        log("Moving {} to {}".format(node_1.value, new_parent.value))
+        # log("Moving {} to {}".format(node_1.value, new_parent.value))
 
         # Remove node from old parent
         parent_1 = binarytree.get_parent(new_tree, node_1)
@@ -85,10 +85,10 @@ def move_random_node(tree):
 
 def rotate_random_node(tree, blocks):
     new_tree = tree.clone()
-    blocks = blocks.clone()
+    blocks = list(blocks)
     node = get_random_node(new_tree)
 
-    log("Rotating block {}".format(node.value))
+    # log("Rotating block {}".format(node.value))
 
     block = get_block_by_name(blocks, node.value)
     block.rotate()  # type:ignore
@@ -150,7 +150,7 @@ def swap_random_nodes(tree):
     parent_1 = binarytree.get_parent(new_tree, node_1)
     parent_2 = binarytree.get_parent(new_tree, node_2)
 
-    log("Swapping {} and {}".format(node_1.value, node_2.value))
+    # log("Swapping {} and {}".format(node_1.value, node_2.value))
 
     # Handle case where one of nodes is the root
     if parent_1 is None:

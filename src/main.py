@@ -10,7 +10,9 @@ import binarytree
 import treemanip
 import util
 import math
+
 import matplotlib.pyplot as plt
+
 
 # TODO
 # wyrzarzanie
@@ -21,6 +23,8 @@ import matplotlib.pyplot as plt
 # 3. Jeśli jest lepsze, zastąp starsze rozwiązanie, jeśli nie, to jest losowa szansa że przyjmujemy gorsze rozwiązanie (zależna od temperatury)
 # 3. Zmniejsz temperaturę
 # Goto 1
+from src.block import Block
+
 
 def check_if_feasible(blocks):
     # check if blocks don't collide
@@ -87,9 +91,14 @@ def place_blocks(tree_root, blocks):
 
 
 def calc_connection_length(blocks, connections):
-    # TODO: implement connection length
-    return 0.0
-
+    def calc_single_connection_length(connection):
+        firstBlock = next((x for x in blocks if x.name == connection.first), Block.default())
+        secondBlock = next((x for x in blocks if x.name == connection.second), Block.default())
+        return math.dist(firstBlock.get_mid_point(), secondBlock.get_mid_point())
+    sum = 0
+    for connection in connections:
+        sum += calc_single_connection_length(connection)
+    return sum
 
 def calc_obj_function(blocks, connections, alpha, beta):
     max_y = max([block.positionY + block.height for block in blocks])
@@ -100,6 +109,13 @@ def calc_obj_function(blocks, connections, alpha, beta):
 
     return alpha * A + beta * L
 
+def calc_obj_function_ideal(blocks, connections, alpha, beta):
+    A = 0
+    for block in blocks:
+        A += block.width * block.height
+    L = 0
+
+    return alpha * A + beta * L
 
 def save_to_file(blocks, connections, tree):
     block_string = ""
@@ -119,9 +135,13 @@ def save_to_file(blocks, connections, tree):
 
 def find_random_possible_change(blocks, tree):
     while True:
-        operation = random.randint(0, 1)
+        operation = random.randint(0, 3)
         if operation == 0:
             candidate_tree = treemanip.swap_random_nodes(tree)
+        if operation == 1:
+            candidate_tree = treemanip.rotate_random_node(tree, blocks)
+        if operation == 2:
+            candidate_tree = treemanip.move_random_node(tree)
         else:
             candidate_tree = treemanip.move_random_node(tree)
 
@@ -132,7 +152,6 @@ def find_random_possible_change(blocks, tree):
 
 
 if __name__ == "__main__":
-
     try:
         (blocks, connections) = files.load_file()
     except:
@@ -150,44 +169,58 @@ if __name__ == "__main__":
 
         if check_if_feasible(blocks):
             break
-
+    # Parameters
     initTemp = 1000
+    MaxOneTempIterations = 5
+    alpha = 0.8
+    beta = 0.2
+    ##########################
+    currentTempIterations = 0
     it = 0
-    bestEval = graphics.get_eval(blocks)
+    bestEval = 9999999999
     bestTree = binary_tree
     bestBlocks = blocks
-    idealSolution = graphics.get_ideal_eval(blocks)
+    idealSolution = calc_obj_function_ideal(blocks, connections, alpha, beta)
     acceptableError = 0.1
     lookingForBestResult = True
     candidatesEvaluations = []
+    bestEvaluations = []
     temperatuers = [initTemp]
     while lookingForBestResult:
-        it += 1
+        if currentTempIterations >= MaxOneTempIterations:
+            it += 1
+            currentTempIterations = 0
+        addedCurrentBestEval = False
         candidateBlocks, candidateTree = find_random_possible_change(bestBlocks, bestTree)
-        candidateEval = graphics.get_eval(candidateBlocks)
-        candidatesEvaluations.append(candidateEval-idealSolution)
+        candidateEval = calc_obj_function(candidateBlocks, connections, alpha, beta)
+        candidatesEvaluations.append((candidateEval - idealSolution)/idealSolution)
         if bestEval > candidateEval:
             bestEval, bestTree, bestBlocks = candidateEval, candidateTree, candidateBlocks
+            currentTempIterations = 0
+            it += 1
         else:
-            diff = (bestEval - candidateEval)/100000
-            temp = initTemp/(it + 1)
+            diff = (bestEval - candidateEval) / idealSolution
+            temp = initTemp / (it + 1)
             temperatuers.append(temp)
             rand = random.random()
-            print(diff, temp)
-            exp = np.exp(-diff/temp)
-            print("rand \t exp \t diff\n", rand, exp, diff)
+            # print(diff, temp)
+            exp = np.exp(-diff / temp)
+            # print("rand \t exp \t diff\n", rand, exp, diff)
             shouldAcceptWorseCandidate = rand < exp
             if shouldAcceptWorseCandidate:
                 bestEval, bestTree, bestBlocks = candidateEval, candidateTree, candidateBlocks
+                currentTempIterations = 0
+                it += 1
+            else:
+                currentTempIterations += 1
+        bestEvaluations.append(bestEval)
         if bestEval <= idealSolution * (1 + acceptableError):
-            break
-
-
-
+            lookingForBestResult = False
     plt.plot(range(0, len(candidatesEvaluations)), candidatesEvaluations)
     plt.show()
     plt.plot(range(0, len(temperatuers)), temperatuers)
     plt.show()
+    plt.plot(range(0, len(bestEvaluations)), bestEvaluations)
+    plt.show()
     save_to_file(bestBlocks, connections, bestTree)
     graphics.placement_visualisation("results_final.png", bestBlocks, scale=0.1, fontscale=1.0)
-

@@ -21,7 +21,7 @@ def draw_block(block, img_size, img_d, scale=1.0, fontscale=1.0):
     center_x = top_left_x + (bottom_right_x - top_left_x) / 2
     center_y = top_left_y + (bottom_right_y - top_left_y) / 2
 
-    fnt = ImageFont.truetype("OpenSans-Bold.ttf", int(base_font_size * fontscale))
+    fnt = ImageFont.truetype("Keyboard.ttf", int(base_font_size * fontscale))
 
     w, h = img_d.textsize(block.name, font=fnt)
     img_d.text((center_x - (w / 2), center_y - (h / 2)), block.name, fill="black", font=fnt)
