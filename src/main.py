@@ -37,11 +37,11 @@ def check_if_feasible(blocks):
                     and block.positionY < block2.positionY + block2.height
                     and block.height + block.positionY > block2.positionY
             ):
-                util.log(
-                    "Solution unfeasible. Collision between blocks {} and {}".format(
-                        block.name, block2.name
-                    )
-                )
+                # util.log(
+                #     "Solution unfeasible. Collision between blocks {} and {}".format(
+                #         block.name, block2.name
+                #     )
+                # )
 
                 return False
 
@@ -155,6 +155,7 @@ if __name__ == "__main__":
     except:
         exit()
 
+    print(connections);
     graphics.placement_visualisation("results.png", blocks, scale=0.1, fontscale=1.0)
 
     while True:
@@ -168,7 +169,7 @@ if __name__ == "__main__":
         if check_if_feasible(blocks):
             break
     # Parameters
-    initTemp = 1000
+    initTemp = 2000
     MaxOneTempIterations = 5
     alpha = 0.8
     beta = 0.2
@@ -198,13 +199,14 @@ if __name__ == "__main__":
             it += 1
         else:
             diff = (bestEval - candidateEval) / idealSolution
-            temp = initTemp / (it + 1)
-            temperatuers.append(temp)
+            initTemp = (initTemp / (it + 1) ) 
+            # #* abs(1-diff)
+            # initTemp = initTemp * (1-abs(-diff))
+
+            temperatuers.append(initTemp)
             rand = random.random()
-            # print(diff, temp)
-            exp = np.exp(-diff / temp)
-            # print("rand \t exp \t diff\n", rand, exp, diff)
-            shouldAcceptWorseCandidate = rand < exp
+            shouldAcceptWorseCandidate = rand < diff+initTemp
+
             if shouldAcceptWorseCandidate:
                 bestEval, bestTree, bestBlocks = candidateEval, candidateTree, candidateBlocks
                 currentTempIterations = 0
@@ -214,11 +216,18 @@ if __name__ == "__main__":
         bestEvaluations.append(bestEval)
         if bestEval <= idealSolution * (1 + acceptableError):
             lookingForBestResult = False
+
     plt.plot(range(0, len(candidatesEvaluations)), candidatesEvaluations)
+    plt.xlabel("Nr iteracji");
+    plt.ylabel("Wartość funkcji celu");
     plt.show()
     plt.plot(range(0, len(temperatuers)), temperatuers)
+    plt.xlabel("Nr iteracji");
+    plt.ylabel("Temperatura");
     plt.show()
     plt.plot(range(0, len(bestEvaluations)), bestEvaluations)
+    plt.xlabel("Nr iteracji");
+    plt.ylabel("Najniższa wartośc f.  celu");
     plt.show()
     save_to_file(bestBlocks, connections, bestTree)
     graphics.placement_visualisation("results_final.png", bestBlocks, scale=0.1, fontscale=1.0)

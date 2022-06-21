@@ -1,0 +1,98 @@
+{
+    "blocks": [
+        {
+            "name": "BLKB",
+            "width": 1295,
+            "height": 616,
+            "rotated": false,
+            "positionX": 0,
+            "positionY": 3829
+        },
+        {
+            "name": "BLKD",
+            "width": 1295,
+            "height": 490,
+            "rotated": false,
+            "positionX": 1652,
+            "positionY": 1295
+        },
+        {
+            "name": "BLKLL",
+            "width": 2534,
+            "height": 1295,
+            "rotated": true,
+            "positionX": 0,
+            "positionY": 0
+        },
+        {
+            "name": "BLKLR",
+            "width": 1295,
+            "height": 2569,
+            "rotated": false,
+            "positionX": 1652,
+            "positionY": 1785
+        },
+        {
+            "name": "BLKP",
+            "width": 756,
+            "height": 840,
+            "rotated": false,
+            "positionX": 882,
+            "positionY": 2513
+        },
+        {
+            "name": "BLKRC",
+            "width": 1939,
+            "height": 1162,
+            "rotated": true,
+            "positionX": 2947,
+            "positionY": 2590
+        },
+        {
+            "name": "BLKRS",
+            "width": 1652,
+            "height": 1218,
+            "rotated": true,
+            "positionX": 0,
+            "positionY": 1295
+        },
+        {
+            "name": "BLKT",
+            "width": 882,
+            "height": 1316,
+            "rotated": false,
+            "positionX": 0,
+            "positionY": 2513
+        },
+        {
+            "name": "BLKUL",
+            "width": 2114,
+            "height": 1295,
+            "rotated": true,
+            "positionX": 2947,
+            "positionY": 1295
+        },
+        {
+            "name": "BLKUR",
+            "width": 1939,
+            "height": 1295,
+            "rotated": true,
+            "positionX": 2534,
+            "positionY": 0
+        }
+    ],
+    "connections": [
+        {
+            "first": "BLKUR",
+            "second": "BLKUL"
+        },
+        {
+            "first": "BLKT",
+            "second": "BLKLL"
+        },
+        {
+            "first": "BLKB",
+            "second": "BLKP"
+        }
+    ]
+}

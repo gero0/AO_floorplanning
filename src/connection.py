@@ -24,7 +24,6 @@ class Connection:
 
 
 def connection_from_JSON(json):
-    Connection.ge
     connection = Connection(
         json["first"],
         json["second"]
