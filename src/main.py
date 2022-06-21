@@ -1,26 +1,11 @@
 import random
-
-import numpy as np
-
+import sys
 import files
 import graphics
 import binarytree
 import treemanip
-import util
 import math
-
 import matplotlib.pyplot as plt
-
-
-# TODO
-# wyrzarzanie
-# obliczanie pola
-# definicja polaczen?(środki)
-# 1. Znajdź nowe randomowe położenie
-# 2. Sprawdź, czy lepsze
-# 3. Jeśli jest lepsze, zastąp starsze rozwiązanie, jeśli nie, to jest losowa szansa że przyjmujemy gorsze rozwiązanie (zależna od temperatury)
-# 3. Zmniejsz temperaturę
-# Goto 1
 from block import Block
 
 
@@ -157,10 +142,27 @@ def find_random_possible_change(blocks, tree):
 
 
 if __name__ == "__main__":
+    alpha = 0.8
+    beta = 0.2
+
+    args = sys.argv[1:]
+    
+    try:
+        for i in range(len(args)):
+            if (args[i] == "-a"):
+                alpha = float(args[i + 1])
+            if (args[i] == "-b"):
+                beta = float(args[i + 1])
+    except:
+        print("Argument error")
+        exit()
+
     try:
         (blocks, connections) = files.load_file()
     except:
         exit()
+
+    print(alpha, beta)
 
     print(connections);
     graphics.placement_visualisation("results.png", blocks, scale=0.1, fontscale=1.0)
@@ -178,8 +180,6 @@ if __name__ == "__main__":
     # Parameters
     initTemp = 2000
     MaxOneTempIterations = 5
-    alpha = 0.8
-    beta = 0.2
     ##########################
     currentTempIterations = 0
     it = 0

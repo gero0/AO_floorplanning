@@ -12,7 +12,7 @@ def load_file():
         print("Error: No file argument passed")
         raise Exception
 
-    if len(sys.argv) > 2 and sys.argv[2] == "--yal":
+    if len(sys.argv) > 2 and "--yal" in sys.argv:
         return load_yal(filename)
     else:
         return load_json(filename)
