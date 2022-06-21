@@ -1,2 +1,4 @@
 binarytree
 Pillow
+numpy
+matplotlib

@@ -2,7 +2,7 @@ import block
 import sys
 import json
 import yal_parser
-
+import connection
 
 def load_file():
     filename = None
@@ -31,7 +31,7 @@ def load_json(filename):
     try:
         data = json.loads(file.read())
         blocks = [block.block_from_JSON(bl) for bl in data["blocks"]]
-        connections = data["connections"]
+        connections = [connection.connection_from_JSON(cn) for cn in data["connections"]]
         return (blocks, connections)
     except:
         print("Error: Invalid JSON file")

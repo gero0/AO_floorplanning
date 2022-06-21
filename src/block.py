@@ -16,6 +16,11 @@ class Block:
         self.width = self.height
         self.height = w
 
+    def get_mid_point(self):
+        return [self.positionX + self.width / 2, self.height / 2 + self.positionY]
+    @staticmethod
+    def default():
+        return Block("XDXDXD",0,0)
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=False, indent=4)
 
@@ -37,3 +42,4 @@ def block_from_JSON(json):
         json["positionY"],
     )
     return block
+
